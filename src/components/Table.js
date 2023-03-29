@@ -1,12 +1,25 @@
 import { useContext } from 'react';
+import PropTypes from 'prop-types';
 import Loading from './Loading';
 import AppContext from '../context/AppContext';
 
-function Table() {
+function Table({ planetName }) {
   const planetContext = useContext(AppContext);
+
   const { isLoading, errors, planetsData } = planetContext;
   console.log(errors);
+
   if (isLoading) return <Loading />;
+
+  let filteredByName = [];
+
+  // Lógica responsável por filtrar planetas de acordo com valor do input
+  if (planetsData !== null) {
+    filteredByName = planetsData.results.filter(
+      (planet) => planet.name.includes(planetName),
+    );
+    // planetsData.results = filteredByName;
+  }
   return (
     <table>
       <thead>
@@ -27,7 +40,7 @@ function Table() {
         </tr>
       </thead>
       <tbody>
-        {planetsData.results.map((planet) => (
+        {filteredByName.map((planet) => (
           <tr key={ planet.name }>
             <td>{planet.name}</td>
             <td>{planet.rotation_period}</td>
@@ -48,5 +61,9 @@ function Table() {
     </table>
   );
 }
+
+Table.propTypes = {
+  planetName: PropTypes.string.isRequired,
+};
 
 export default Table;
