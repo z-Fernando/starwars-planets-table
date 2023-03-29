@@ -1,7 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from 'react';
 import './App.css';
-import appContext from './context/appContext';
+import Table from './components/Table';
+import AppContext from './context/AppContext';
 import useFetch from './hooks/useFetch';
 
 function App() {
@@ -28,9 +29,10 @@ function App() {
   };
 
   return (
-    <appContext.Provider value={ context }>
+    <AppContext.Provider value={ context }>
       <span>Hello, App!</span>
-    </appContext.Provider>
+      {planetsData !== null && <Table />}
+    </AppContext.Provider>
 
   );
 }
