@@ -6,6 +6,7 @@ export default function Home() {
 
   return (
     <main>
+      {/* Input que filtra pelo nome */}
       <label htmlFor="name-filter">
         <input
           type="text"
