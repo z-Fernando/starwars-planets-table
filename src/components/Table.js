@@ -5,21 +5,18 @@ import AppContext from '../context/AppContext';
 
 function Table({ planetName }) {
   const planetContext = useContext(AppContext);
-
   const { isLoading, errors, planetsData } = planetContext;
   console.log(errors);
 
-  if (isLoading) return <Loading />;
-
-  let filteredByName = [];
-
   // Lógica responsável por filtrar planetas de acordo com valor do input
+  let filteredByName = [];
   if (planetsData !== null) {
     filteredByName = planetsData.results.filter(
       (planet) => planet.name.includes(planetName),
     );
-    // planetsData.results = filteredByName;
   }
+
+  if (isLoading) return <Loading />;
   return (
     <table>
       <thead>
