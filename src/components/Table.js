@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Loading from './Loading';
 import AppContext from '../context/AppContext';
@@ -7,27 +7,51 @@ function Table({ planetName }) {
   const planetContext = useContext(AppContext);
   const { isLoading, errors, planetsData } = planetContext;
   console.log(errors);
+
   // Cria estado para as options do select
   const [options, setOptions] = useState({
     column: 'population',
     comparison: 'maior que',
     value: 0,
   });
+  const [planetsFiltered, setPlanetsFiltered] = useState(planetsData.results);
 
   // Lógica responsável por filtrar planetas de acordo com valor do input
-  let filteredByName = [];
-  if (planetsData !== null) {
-    filteredByName = planetsData.results.filter(
+  useEffect(() => {
+    setPlanetsFiltered(planetsData.results.filter(
       (planet) => planet.name.includes(planetName),
-    );
-  }
+    ));
+  }, [planetName]);
 
   // Lógica responsável por filtrar planetas de acordo com a tag select
   function filterBySelect() {
-    const filteredBySelect = filteredByName.filter((planet) => (
-      planet[options.column] > options.value
-    ));
-    console.log(filteredBySelect);
+    const { column, comparison, value } = options;
+    const planetsFilteredByComparison = planetsFiltered.filter((planet) => {
+      switch (comparison) {
+      case 'maior que':
+        return planet[column] > value;
+      case 'menor que':
+        return planet[column] < value;
+      default:
+        return planet[column] === value;
+      }
+    });
+    setPlanetsFiltered(planetsFilteredByComparison);
+    console.log(planetsFiltered);
+    // if (planetsFiltered.length > 0) {
+    //   setPlanetsFiltered(
+    //     planetsFiltered.filter((planet) => {
+    //       switch (comparison) {
+    //       case 'maior que':
+    //         return planet[column] > value;
+    //       case 'menor que':
+    //         return planet[column] < value;
+    //       default:
+    //         return planet[column] === value;
+    //       }
+    //     }),
+    //   );
+    // }
   }
 
   if (isLoading) return <Loading />;
@@ -60,7 +84,6 @@ function Table({ planetName }) {
         />
         <button
           data-testid="button-filter"
-          value="Filtrar"
           onClick={ filterBySelect }
         >
           Filtrar
@@ -85,7 +108,7 @@ function Table({ planetName }) {
           </tr>
         </thead>
         <tbody>
-          {filteredByName.map((planet) => (
+          {planetsFiltered.map((planet) => (
             <tr key={ planet.name }>
               <td>{planet.name}</td>
               <td>{planet.rotation_period}</td>
