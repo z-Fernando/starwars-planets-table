@@ -4,6 +4,7 @@ import Loading from './Loading';
 import AppContext from '../context/AppContext';
 
 function Table({ planetName }) {
+  // Importa contexto com a resposta da API
   const planetContext = useContext(AppContext);
   const { isLoading, errors, planetsData } = planetContext;
   console.log(errors);
@@ -21,6 +22,11 @@ function Table({ planetName }) {
   // Cria estado para salvar filtros
   const [filters, setFilters] = useState([]);
 
+  // const [columnFilters, setColumnFilters] = useState([
+  //   'population', 'orbital_period', 'diameter',
+  //   'rotation_period', 'surface_water',
+  // ]);
+
   // Lógica responsável por filtrar planetas de acordo com a tag select
   function filterBySelect(array) {
     if (filters.length === 0) return array;
@@ -29,14 +35,14 @@ function Table({ planetName }) {
       filteredByComparison = filteredByComparison.filter((planet) => {
         const { column, comparison, value } = filter;
         const valueNumber = Number(value);
-        const columnNumber = Number(planet[column]);
+        const columnValue = Number(planet[column]);
         switch (comparison) {
         case 'maior que':
-          return columnNumber > valueNumber;
+          return columnValue > valueNumber;
         case 'menor que':
-          return columnNumber < valueNumber;
+          return columnValue < valueNumber;
         default:
-          return columnNumber === valueNumber;
+          return columnValue === valueNumber;
         }
       });
     });
@@ -51,11 +57,25 @@ function Table({ planetName }) {
     return filteredByName;
   };
 
+  // Faz o tratamento de dados, manipula desde o dado bruto até o dado pós filtragem
   useEffect(() => {
     const filteredByName = filterByName(planetsData.results);
     const filteredByComparison = filterBySelect(filteredByName);
     setPlanetsFiltered(filteredByComparison);
   }, [planetName, filters]);
+
+  // Array com as opções do select column-filter
+  const columnFilters = [
+    'population', 'orbital_period', 'diameter',
+    'rotation_period', 'surface_water',
+  ].filter((fil) => !filters.some(({ column }) => column === fil));
+
+  // Lógica para evitar filtragem repetida
+  if (!columnFilters.includes(options.column) && columnFilters.length !== 0) {
+    setOptions({
+      ...options, column: columnFilters[0],
+    });
+  }
 
   if (isLoading) return <Loading />;
   return (
@@ -65,11 +85,12 @@ function Table({ planetName }) {
           data-testid="column-filter"
           onChange={ (e) => setOptions({ ...options, column: e.target.value }) }
         >
-          <option value="population">population</option>
-          <option value="orbital_period">orbital_period</option>
-          <option value="diameter">diameter</option>
-          <option value="rotation_period">rotation_period</option>
-          <option value="surface_water">surface_water</option>
+          {
+            columnFilters
+              .map((filter) => (
+                <option key={ filter }>{filter}</option>
+              ))
+          }
         </select>
         <select
           data-testid="comparison-filter"
@@ -87,7 +108,15 @@ function Table({ planetName }) {
         />
         <button
           data-testid="button-filter"
-          onClick={ () => setFilters([...filters, options]) }
+          onClick={ () => {
+            const verifyFilters = filters
+              .some((filter) => filter.column === options.column);
+            if (!verifyFilters) {
+              setFilters([...filters, options]);
+            } else {
+              console.log('Filtro já existe');
+            }
+          } }
         >
           Filtrar
         </button>
