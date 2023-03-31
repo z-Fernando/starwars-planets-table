@@ -8,51 +8,54 @@ function Table({ planetName }) {
   const { isLoading, errors, planetsData } = planetContext;
   console.log(errors);
 
-  // Cria estado para as options do select
+  // Cria estado para controlar as options do select
   const [options, setOptions] = useState({
     column: 'population',
     comparison: 'maior que',
     value: 0,
   });
+
+  // Cria estado para manipular o array mapeado na Table
   const [planetsFiltered, setPlanetsFiltered] = useState(planetsData.results);
 
-  // Lógica responsável por filtrar planetas de acordo com valor do input
-  useEffect(() => {
-    setPlanetsFiltered(planetsData.results.filter(
-      (planet) => planet.name.includes(planetName),
-    ));
-  }, [planetName]);
+  // Cria estado para salvar filtros
+  const [filters, setFilters] = useState([]);
 
   // Lógica responsável por filtrar planetas de acordo com a tag select
-  function filterBySelect() {
-    const { column, comparison, value } = options;
-    const planetsFilteredByComparison = planetsFiltered.filter((planet) => {
-      switch (comparison) {
-      case 'maior que':
-        return planet[column] > value;
-      case 'menor que':
-        return planet[column] < value;
-      default:
-        return planet[column] === value;
-      }
+  function filterBySelect(array) {
+    if (filters.length === 0) return array;
+    let filteredByComparison = array;
+    filters.forEach((filter) => {
+      filteredByComparison = filteredByComparison.filter((planet) => {
+        const { column, comparison, value } = filter;
+        const valueNumber = Number(value);
+        const columnNumber = Number(planet[column]);
+        switch (comparison) {
+        case 'maior que':
+          return columnNumber > valueNumber;
+        case 'menor que':
+          return columnNumber < valueNumber;
+        default:
+          return columnNumber === valueNumber;
+        }
+      });
     });
-    setPlanetsFiltered(planetsFilteredByComparison);
-    console.log(planetsFiltered);
-    // if (planetsFiltered.length > 0) {
-    //   setPlanetsFiltered(
-    //     planetsFiltered.filter((planet) => {
-    //       switch (comparison) {
-    //       case 'maior que':
-    //         return planet[column] > value;
-    //       case 'menor que':
-    //         return planet[column] < value;
-    //       default:
-    //         return planet[column] === value;
-    //       }
-    //     }),
-    //   );
-    // }
+    return filteredByComparison;
   }
+
+  // Lógica responsável por filtrar planetas de acordo com valor do input
+  const filterByName = (array) => {
+    const filteredByName = array.filter(
+      (planet) => planet.name.includes(planetName),
+    );
+    return filteredByName;
+  };
+
+  useEffect(() => {
+    const filteredByName = filterByName(planetsData.results);
+    const filteredByComparison = filterBySelect(filteredByName);
+    setPlanetsFiltered(filteredByComparison);
+  }, [planetName, filters]);
 
   if (isLoading) return <Loading />;
   return (
@@ -84,7 +87,7 @@ function Table({ planetName }) {
         />
         <button
           data-testid="button-filter"
-          onClick={ filterBySelect }
+          onClick={ () => setFilters([...filters, options]) }
         >
           Filtrar
         </button>
