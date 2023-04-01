@@ -214,7 +214,7 @@ function Table({ planetName }) {
         <tbody>
           {planetsFiltered.map((planet) => (
             <tr key={ planet.name } className="planet-line">
-              <td>{planet.name}</td>
+              <td data-testid={ planet.name }>{planet.name}</td>
               <td>{planet.rotation_period}</td>
               <td>{planet.orbital_period}</td>
               <td>{planet.diameter}</td>
