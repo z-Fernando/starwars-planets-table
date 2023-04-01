@@ -17,6 +17,7 @@ export default function Home() {
           value={ filterByName }
           onChange={ (ev) => setFilterByName(ev.target.value) }
         />
+        <span className="searching">{' 🔍 '}</span>
       </label>
       <Table planetName={ filterByName } />
     </main>

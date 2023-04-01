@@ -4,10 +4,14 @@ import Loading from './Loading';
 import AppContext from '../context/AppContext';
 
 function Table({ planetName }) {
-  // Importa contexto com a resposta da API
   const planetContext = useContext(AppContext);
-  const { isLoading, errors, planetsData } = planetContext;
-  console.log(errors);
+  const { isLoading, planetsData } = planetContext;
+  const [planetsFiltered, setPlanetsFiltered] = useState(planetsData.results);
+  const [filters, setFilters] = useState([]);
+  const [sortFilter, setSortFilter] = useState(
+    { order: { column: 'population', sort: 'ASC' } },
+  );
+  const [orderToFilter, setOrderToFilter] = useState();
 
   // Cria estado para controlar as options do select
   const [options, setOptions] = useState({
@@ -15,12 +19,6 @@ function Table({ planetName }) {
     comparison: 'maior que',
     value: 0,
   });
-
-  // Cria estado para manipular o array mapeado na Table
-  const [planetsFiltered, setPlanetsFiltered] = useState(planetsData.results);
-
-  // Cria estado para salvar filtros
-  const [filters, setFilters] = useState([]);
 
   // Lógica responsável por filtrar planetas de acordo com a tag select
   const filterBySelect = (array) => {
@@ -52,14 +50,30 @@ function Table({ planetName }) {
     return filteredByName;
   };
 
-  // Faz o tratamento de dados, manipula desde o dado bruto até o dado pós filtragem
+  const orderBySort = (array) => {
+    if (!orderToFilter) return array;
+    const negative = -1;
+    const { order: { column, sort } } = orderToFilter;
+    switch (sort) {
+    case 'DESC':
+      return [...array].sort((a, b) => (b[column] === 'unknown'
+        ? negative : parseInt(b[column], 10) - parseInt(a[column], 10)));
+    case 'ASC':
+      return [...array].sort((a, b) => ((b[column] === 'unknown')
+        ? negative : parseInt(a[column], 10) - parseInt(b[column], 10)));
+    default:
+      return array;
+    }
+  };
+
   useEffect(() => {
     const filteredByName = filterByName(planetsData.results);
     const filteredByComparison = filterBySelect(filteredByName);
-    setPlanetsFiltered(filteredByComparison);
-  }, [planetName, filters]);
+    const ordernedBySort = orderBySort(filteredByComparison);
+    setPlanetsFiltered(ordernedBySort);
+  }, [planetName, filters, orderToFilter]);
 
-  // Array com as opções do select column-filter
+  // Array com as opções do select column-filter evitando os filtros já criados
   const columnFilters = [
     'population', 'orbital_period', 'diameter',
     'rotation_period', 'surface_water',
@@ -77,6 +91,7 @@ function Table({ planetName }) {
     <section>
       <div className="selects-filter">
         <select
+          className="select-input"
           data-testid="column-filter"
           onChange={ (e) => setOptions({ ...options, column: e.target.value }) }
         >
@@ -108,16 +123,59 @@ function Table({ planetName }) {
               .some((filter) => filter.column === options.column);
             if (!verifyFilters) {
               setFilters([...filters, options]);
-            } else {
-              console.log('Filtro já existe');
             }
           } }
         >
           Filtrar
         </button>
       </div>
+      <div className="sort-filter">
+        <select
+          data-testid="column-sort"
+          onChange={ ({ target: { value } }) => setSortFilter(
+            { order: { ...sortFilter.order, column: value } },
+          ) }
+        >
+          {[
+            'population', 'orbital_period', 'diameter',
+            'rotation_period', 'surface_water',
+          ].map((column, i) => <option key={ i }>{column}</option>)}
+        </select>
+        <div
+          className="radio-inputs-area"
+          onChange={ ({ target: { value } }) => setSortFilter(
+            { order: { ...sortFilter.order, sort: value } },
+          ) }
+        >
+          <label htmlFor="ASC">
+            {' 🔺 '}
+            <input
+              type="radio"
+              name="sort"
+              value="ASC"
+              data-testid="column-sort-input-asc"
+            />
+          </label>
+          <label htmlFor="DESC">
+            {' 🔻 '}
+            <input
+              type="radio"
+              name="sort"
+              value="DESC"
+              data-testid="column-sort-input-desc"
+            />
+          </label>
+        </div>
+        <button
+          data-testid="column-sort-button"
+          onClick={ () => setOrderToFilter(sortFilter) }
+        >
+          Ordenar
+
+        </button>
+      </div>
       <div>
-        {
+        { // Filtros criados pelo usuário
           filters.length > 0
           && (
             <div>
@@ -147,24 +205,15 @@ function Table({ planetName }) {
       <table>
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Rotation Period</th>
-            <th>Orbital Period</th>
-            <th>Diameter</th>
-            <th>Climate</th>
-            <th>Gravity</th>
-            <th>Terrain</th>
-            <th>Surface Water</th>
-            <th>Population</th>
-            <th>Films</th>
-            <th>Created</th>
-            <th>Edited</th>
-            <th>URL</th>
+            {['Name', 'Rotation Period', 'Orbital Period', 'Diameter',
+              'Climate', 'Gravity', 'Terrain', 'Surface Water', 'Population',
+              'Films', 'Created', 'Edited', 'URL'].map((a, i) => <th key={ i }>{a}</th>)}
+
           </tr>
         </thead>
         <tbody>
           {planetsFiltered.map((planet) => (
-            <tr key={ planet.name }>
+            <tr key={ planet.name } className="planet-line">
               <td>{planet.name}</td>
               <td>{planet.rotation_period}</td>
               <td>{planet.orbital_period}</td>
@@ -185,9 +234,7 @@ function Table({ planetName }) {
     </section>
   );
 }
-
 Table.propTypes = {
   planetName: PropTypes.string.isRequired,
 };
-
 export default Table;
