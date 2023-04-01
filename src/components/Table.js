@@ -22,13 +22,8 @@ function Table({ planetName }) {
   // Cria estado para salvar filtros
   const [filters, setFilters] = useState([]);
 
-  // const [columnFilters, setColumnFilters] = useState([
-  //   'population', 'orbital_period', 'diameter',
-  //   'rotation_period', 'surface_water',
-  // ]);
-
   // Lógica responsável por filtrar planetas de acordo com a tag select
-  function filterBySelect(array) {
+  const filterBySelect = (array) => {
     if (filters.length === 0) return array;
     let filteredByComparison = array;
     filters.forEach((filter) => {
@@ -47,7 +42,7 @@ function Table({ planetName }) {
       });
     });
     return filteredByComparison;
-  }
+  };
 
   // Lógica responsável por filtrar planetas de acordo com valor do input
   const filterByName = (array) => {
@@ -120,6 +115,34 @@ function Table({ planetName }) {
         >
           Filtrar
         </button>
+      </div>
+      <div>
+        {
+          filters.length > 0
+          && (
+            <div>
+              <div className="filter-line">
+                {filters.map((filt, i) => (
+                  <span key={ i } data-testid="filter">
+                    {`Filtrando por ${filt.column} ${filt.comparison} ${filt.value} `}
+                    <button
+                      onClick={ () => setFilters(filters.filter((fil) => fil !== filt)) }
+                    >
+                      {' ❌ '}
+                    </button>
+                  </span>
+                ))}
+              </div>
+              <button
+                className="remove-all-filters"
+                data-testid="button-remove-filters"
+                onClick={ () => setFilters([]) }
+              >
+                Remover filtros
+              </button>
+            </div>
+          )
+        }
       </div>
       <table>
         <thead>
