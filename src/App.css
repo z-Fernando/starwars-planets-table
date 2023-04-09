@@ -1,1 +1,143 @@
-/* Evitando conflitos */
+* {
+  padding: 0;
+  margin: 0;
+  border: none;
+  box-sizing: border-box;
+}
+body {
+  font-size: .8rem;
+  background-color: rgb(76, 76, 76);
+  color: white;
+}
+main {
+  display: flex;
+  flex-flow: column wrap;
+  gap: 1rem;
+}
+/* Input para pesquisar por nome */
+.name-filter {
+  margin-top: 1em;
+  width: 36vw;
+  background-color: transparent;
+  border: 1px solid rgb(115, 112, 112);
+  border-radius: .3em;
+  text-align: center;
+  color: white;
+  padding: .6em;
+  margin: 1em 0 0 1em;
+}
+.name-filter:focus {
+  outline: none;
+}
+.searching {
+  font-size: 1.4em;
+}
+/* Selects Filter */
+.selects-filter {
+  display: flex;
+  /* justify-content: space-around; */
+  gap: 1em;
+  padding: 1em;
+}
+.selects-filter input, select, button {
+  color: white;
+  padding: .5em;
+  background-color: transparent;
+  border: 1px rgb(115, 112, 112) solid;
+  appearance: textfield;
+  transition: background-color .5s, color .8s;
+  border-radius: .2em;
+}
+.select-input, .sort-filter select {
+  min-width: 12.5vw;
+}
+input[type=number] {
+  max-width: 5vw;
+  text-align: end;
+}
+.selects-filter button:hover, .sort-filter button:hover  {
+  background-color: rgb(230, 230, 46);
+  color: rgb(30, 30, 30);
+}
+/* Filter line */
+.remove-all-filters {
+  border: none;
+  display: flex;
+  justify-content: flex-end;
+  width: 25vw;
+  background-color: transparent;
+  color:rgb(241, 102, 102);
+  padding: 1em;
+  transition: background-color .5s, color .5s;
+}
+.remove-all-filters:hover {
+  background-color: rgb(174, 82, 82);
+  color: white;
+}
+.filter-line {
+  display: flex;
+  /* flex-flow: row wrap; */
+}
+.filter-line span {
+  text-align: center;
+  border: solid 1px rgb(115, 112, 112);
+  margin: 1em;
+  padding: 1em;
+  border-radius: .4em;
+  display: flex;
+  flex-flow: column;
+  max-width: 25vw;
+  gap: .5em;
+}
+.filter-line button {
+  background-color: transparent;
+  border: 1px rgb(174, 82, 82) solid;
+  padding: .2em;
+  border-radius: .2em;
+  transition: background-color .5s;
+}
+.filter-line button:hover {
+  background-color: rgb(174, 82, 82);
+}
+/* sort filter */
+.sort-filter {
+  width: 36vw;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 1em;
+  /* border: 1px red solid; */
+}
+.sort-filter button {
+  width: 12vw;
+}
+.radio-inputs-area {
+  display: flex;
+  width: 8vw;
+  justify-content: space-around;
+}
+/* Tabela */
+table {
+  margin-top: 1.5em;
+  border-collapse: collapse;
+  width: 100vw;
+  table-layout: fixed;
+}
+th, td {
+  text-align: center;
+  border: solid 2px rgb(115, 112, 112);
+  max-width: 5vw;
+  overflow: hidden;
+}
+th {
+  text-align: center;
+  border: solid 2px rgb(115, 112, 112);
+  font-weight: bold;
+}
+.planet-line {
+  transition: background-color .5s, font-size 1s;
+}
+.planet-line:hover {
+ background-color: rgb(59, 59, 59);
+ /* font-size: 1.1em; */
+}
