@@ -5,15 +5,24 @@
   box-sizing: border-box;
 }
 body {
-  font-size: .8rem;
   background-color: rgb(76, 76, 76);
   color: white;
 }
 main {
   display: flex;
   flex-flow: column wrap;
+  align-items: center;
   gap: 1rem;
+  min-height: 100vh;
+  overflow: hidden;
 }
+
+.all-filters {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+}
+
 /* Input para pesquisar por nome */
 .name-filter {
   margin-top: 1em;
@@ -35,8 +44,7 @@ main {
 /* Selects Filter */
 .selects-filter {
   display: flex;
-  /* justify-content: space-around; */
-  gap: 1em;
+  gap: 2em;
   padding: 1em;
 }
 .selects-filter input, select, button {
@@ -120,13 +128,14 @@ input[type=number] {
 table {
   margin-top: 1.5em;
   border-collapse: collapse;
-  width: 100vw;
+  width: 70vw;
   table-layout: fixed;
 }
 th, td {
   text-align: center;
   border: solid 2px rgb(115, 112, 112);
   max-width: 5vw;
+  padding: .4em;
   overflow: hidden;
 }
 th {

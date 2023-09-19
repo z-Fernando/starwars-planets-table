@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-max-depth */
 import { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Loading from './Loading';
@@ -71,6 +72,7 @@ function Table({ planetName }) {
     const filteredByComparison = filterBySelect(filteredByName);
     const ordernedBySort = orderBySort(filteredByComparison);
     setPlanetsFiltered(ordernedBySort);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [planetName, filters, orderToFilter]);
 
   // Array com as opções do select column-filter evitando os filtros já criados
@@ -89,94 +91,95 @@ function Table({ planetName }) {
   if (isLoading) return <Loading />;
   return (
     <section>
-      <div className="selects-filter">
-        <select
-          className="select-input"
-          data-testid="column-filter"
-          onChange={ (e) => setOptions({ ...options, column: e.target.value }) }
-        >
-          {
-            columnFilters
-              .map((filter) => (
-                <option key={ filter }>{filter}</option>
-              ))
-          }
-        </select>
-        <select
-          data-testid="comparison-filter"
-          onChange={ (e) => setOptions({ ...options, comparison: e.target.value }) }
-        >
-          <option value="maior que">maior que</option>
-          <option value="menor que">menor que</option>
-          <option value="igual a">igual a</option>
-        </select>
-        <input
-          type="number"
-          data-testid="value-filter"
-          value={ options.value }
-          onChange={ (e) => setOptions({ ...options, value: e.target.value }) }
-        />
-        <button
-          data-testid="button-filter"
-          onClick={ () => {
-            const verifyFilters = filters
-              .some((filter) => filter.column === options.column);
-            if (!verifyFilters) {
-              setFilters([...filters, options]);
+      <div className="all-filters">
+        <div className="selects-filter">
+          <select
+            className="select-input"
+            data-testid="column-filter"
+            onChange={ (e) => setOptions({ ...options, column: e.target.value }) }
+          >
+            {
+              columnFilters
+                .map((filter) => (
+                  <option key={ filter }>{filter}</option>
+                ))
             }
-          } }
-        >
-          Filtrar
-        </button>
-      </div>
-      <div className="sort-filter">
-        <select
-          data-testid="column-sort"
-          onChange={ ({ target: { value } }) => setSortFilter(
-            { order: { ...sortFilter.order, column: value } },
-          ) }
-        >
-          {[
-            'population', 'orbital_period', 'diameter',
-            'rotation_period', 'surface_water',
-          ].map((column, i) => <option key={ i }>{column}</option>)}
-        </select>
-        <div
-          className="radio-inputs-area"
-          onChange={ ({ target: { value } }) => setSortFilter(
-            { order: { ...sortFilter.order, sort: value } },
-          ) }
-        >
-          <label htmlFor="ASC">
-            {' 🔺 '}
-            <input
-              type="radio"
-              name="sort"
-              value="ASC"
-              data-testid="column-sort-input-asc"
-            />
-          </label>
-          <label htmlFor="DESC">
-            {' 🔻 '}
-            <input
-              type="radio"
-              name="sort"
-              value="DESC"
-              data-testid="column-sort-input-desc"
-            />
-          </label>
+          </select>
+          <select
+            data-testid="comparison-filter"
+            onChange={ (e) => setOptions({ ...options, comparison: e.target.value }) }
+          >
+            <option value="maior que">maior que</option>
+            <option value="menor que">menor que</option>
+            <option value="igual a">igual a</option>
+          </select>
+          <input
+            type="number"
+            data-testid="value-filter"
+            value={ options.value }
+            onChange={ (e) => setOptions({ ...options, value: e.target.value }) }
+          />
+          <button
+            data-testid="button-filter"
+            onClick={ () => {
+              const verifyFilters = filters
+                .some((filter) => filter.column === options.column);
+              if (!verifyFilters) {
+                setFilters([...filters, options]);
+              }
+            } }
+          >
+            Filtrar
+          </button>
         </div>
-        <button
-          data-testid="column-sort-button"
-          onClick={ () => setOrderToFilter(sortFilter) }
-        >
-          Ordenar
+        <div className="sort-filter">
+          <select
+            data-testid="column-sort"
+            onChange={ ({ target: { value } }) => setSortFilter(
+              { order: { ...sortFilter.order, column: value } },
+            ) }
+          >
+            {[
+              'Population', 'Orbital period', 'Diameter',
+              'Rotation period', 'Surface water',
+            ].map((column, i) => <option key={ i }>{column}</option>)}
+          </select>
+          <div
+            className="radio-inputs-area"
+            onChange={ ({ target: { value } }) => setSortFilter(
+              { order: { ...sortFilter.order, sort: value } },
+            ) }
+          >
+            <label htmlFor="ASC">
+              {' 🔺 '}
+              <input
+                type="radio"
+                name="sort"
+                value="ASC"
+                data-testid="column-sort-input-asc"
+              />
+            </label>
+            <label htmlFor="DESC">
+              {' 🔻 '}
+              <input
+                type="radio"
+                name="sort"
+                value="DESC"
+                data-testid="column-sort-input-desc"
+              />
+            </label>
+          </div>
+          <button
+            data-testid="column-sort-button"
+            onClick={ () => setOrderToFilter(sortFilter) }
+          >
+            Ordenar
 
-        </button>
-      </div>
-      <div>
-        { // Filtros criados pelo usuário
-          filters.length > 0
+          </button>
+        </div>
+        <div>
+          { // Filtros criados pelo usuário
+            filters.length > 0
           && (
             <div>
               <div className="filter-line">
@@ -191,17 +194,18 @@ function Table({ planetName }) {
                   </span>
                 ))}
               </div>
-              <button
-                className="remove-all-filters"
-                data-testid="button-remove-filters"
-                onClick={ () => setFilters([]) }
-              >
-                Remover filtros
-              </button>
             </div>
           )
-        }
+          }
+        </div>
       </div>
+      <button
+        className="remove-all-filters"
+        data-testid="button-remove-filters"
+        onClick={ () => setFilters([]) }
+      >
+        Remover filtros
+      </button>
       <table>
         <thead>
           <tr>
