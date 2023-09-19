@@ -206,8 +206,8 @@ function Table({ planetName }) {
         <thead>
           <tr>
             {['Name', 'Rotation Period', 'Orbital Period', 'Diameter',
-              'Climate', 'Gravity', 'Terrain', 'Surface Water', 'Population',
-              'Films', 'Created', 'Edited', 'URL'].map((a, i) => <th key={ i }>{a}</th>)}
+              'Climate', 'Surface Water', 'Population']
+              .map((a, i) => <th key={ i }>{a}</th>)}
 
           </tr>
         </thead>
@@ -219,14 +219,8 @@ function Table({ planetName }) {
               <td>{planet.orbital_period}</td>
               <td>{planet.diameter}</td>
               <td>{planet.climate}</td>
-              <td>{planet.gravity}</td>
-              <td>{planet.terrain}</td>
               <td>{planet.surface_water}</td>
               <td>{planet.population}</td>
-              <td>{planet.films}</td>
-              <td>{planet.created}</td>
-              <td>{planet.edited}</td>
-              <td>{planet.url}</td>
             </tr>
           ))}
         </tbody>
