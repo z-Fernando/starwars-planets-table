@@ -1,11 +1,17 @@
 # :construction: README em construção ! :construction:
 ## [Deploy do projeto](https://starwars-planets-info.surge.sh/)
-<!-- Olá, Tryber!
-Esse é apenas um arquivo inicial para o README do seu projeto.
-É essencial que você preencha esse documento por conta própria, ok?
-Não deixe de usar nossas dicas de escrita de README de projetos, e deixe sua criatividade brilhar!
-:warning: IMPORTANTE: você precisa deixar nítido:
-- quais arquivos/pastas foram desenvolvidos por você; 
-- quais arquivos/pastas foram desenvolvidos por outra pessoa estudante;
-- quais arquivos/pastas foram desenvolvidos pela Trybe.
--->
+
+Esse projeto utiliza uma API para trazer dados planetários do universo Star Wars. Você poderá utilizar filtros para conhecer um pouco mais dos detalhes de cada planeta.
+
+Se você estiver interessado em rodar esse projeto na sua máquina, siga esses passos:
+
+- Clone o projeto
+- Instale as dependências
+- No diretório raiz do projeto, execute o comando: npm start
+
+Tem sugestão de melhoria? Bora trocar uma ideia!
+
+:OBSERVAÇÃO:
+
+- Os únicos arquivos alterados por mim estão nos diretórios ./src e ./public
+- O restante dos arquivos foram desenvolvidos pela Trybe, escola onde iniciei esse projeto.
